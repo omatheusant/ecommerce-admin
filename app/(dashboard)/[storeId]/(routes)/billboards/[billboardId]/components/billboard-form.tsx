@@ -23,8 +23,6 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { ALertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
-import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/upload";
 
 const formSchema = z.object({
@@ -43,7 +41,6 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -65,12 +62,15 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+        await axios.patch(
+          `/api/${params.storeId}/billboards/${params.billboardId}`,
+          data
+        );
       } else {
         await axios.post(`/api/${params.storeId}/billboards`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/billboards/`)
+      router.push(`/${params.storeId}/billboards/`);
       toast.success(toastMessage);
     } catch (error) {
       toast.error("Something went wrong.");
@@ -82,12 +82,16 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
+      await axios.delete(
+        `/api/${params.storeId}/billboards/${params.billboardId}`
+      );
       router.refresh();
       router.push("/");
       toast.success("Store deleted");
     } catch (error) {
-      toast.error("Make sure you removed all categories using this billboard first");
+      toast.error(
+        "Make sure you removed all categories using this billboard first"
+      );
     } finally {
       setLoading(false);
       setOpen(false);
@@ -169,7 +173,6 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
           </Button>
         </form>
       </Form>
-      <Separator />
     </>
   );
 };
